@@ -1,6 +1,9 @@
-# Nokia 225 Maps
+# Nokia 225 4g Maps
 
 A server-side rendered map application for Nokia 225 4G and other feature phones with 320x240 QVGA screens.
+
+![gmap](https://github.com/user-attachments/assets/291b7b25-37dc-45d6-8399-2f46d5bb6157)
+
 
 ## ✨ Features
 
@@ -147,13 +150,13 @@ const DEFAULT_ZOOM = 14;
 ┌─────────────────────────┐
 │ Map (310×250px)         │
 ├─────────────────────────┤
-│ [←] [→] [↑] [↓] [+][-]│
+│ [←] [→] [↑] [↓] [+][-]  │
 ├─────────────────────────┤
 │ Street, City [SEARCH]   │
 ├─────────────────────────┤
 │ Streets | Out | Sat     │
 ├─────────────────────────┤
-│ Lat: 52.52 Lon: 13.40 │
+│ Lat: 52.52 Lon: 13.40   │
 └─────────────────────────┘
 ```
 
