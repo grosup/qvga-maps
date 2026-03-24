@@ -1,4 +1,4 @@
-# Nokia 225 4g Maps
+# Nokia 225 4G Maps
 
 A server-side rendered map application for Nokia 225 4G and other feature phones with 320x240 QVGA screens.
 
