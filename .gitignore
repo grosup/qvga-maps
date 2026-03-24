@@ -1,0 +1,8 @@
+.claude/
+.git
+/cache/
+/docs
+.ftp.txt
+/deploy.php
+/CLAUDE.md
+/config.php

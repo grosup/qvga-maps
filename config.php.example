@@ -1,0 +1,9 @@
+<?php
+/**
+ * Mapbox Token Configuration
+ * Get your token at: https://account.mapbox.com/access-tokens/
+ * Free tier: 50,000 map loads/month
+ */
+
+// Paste your Mapbox token here:
+define('MAPBOX_TOKEN', 'pk.eyJ1IjoidGdyb3N1hCIsImEiOiJjbWtzNmVneDMwYzU2Mm9HejdranGud2RmIn0.UCf8vvGhYa1wfKjPpF6Pig');
