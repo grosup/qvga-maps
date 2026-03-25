@@ -131,7 +131,7 @@ if (!empty($error)) {
 <?= $errorMessage ?>
 
 <div class="refresh">
-    <a href="../index.php">Back to Map</a>
+    <a href="../index.php" data-testid="search-result-back-header">Back to Map</a>
 </div>
 
 <?php if (!empty($results)): ?>
@@ -140,19 +140,19 @@ if (!empty($error)) {
         <div class="result">
             <a href="../controller/search.php?select=<?= $index ?>&address=<?= urlencode(
     $address,
-) ?>">
+) ?>" data-testid="search-result-item-<?= $index ?>">
                 <?= htmlspecialchars($result['display_name']) ?>
 				</a>
 			</div>
 		<?php endforeach; ?>
-<?php elseif (!empty($address)): ?>
+<?php elseif (isset($_POST['address']) || isset($_GET['address'])): ?>
     <div class="result error">
         No results found for "<?= htmlspecialchars($address) ?>"
     </div>
 <?php endif; ?>
 
 <div class="refresh">
-    <a href="../index.php">Back to Map</a>
+    <a href="../index.php" data-testid="search-result-back-footer">Back to Map</a>
 </div>
 
 </body>

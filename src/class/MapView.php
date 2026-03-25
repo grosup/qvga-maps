@@ -80,7 +80,7 @@ class MapView
 
     private function renderMap(): string
     {
-        return '<img src="controller/render_map.php" alt="MAP" style="width:310px; height:250px; border:1px solid #333; display:block; margin:0;">';
+        return '<img src="controller/render_map.php" data-testid="map" alt="MAP" style="width:310px; height:250px; border:1px solid #333; display:block; margin:0;">';
     }
 
     private function renderControls(): string
@@ -91,14 +91,14 @@ class MapView
             '<form method="POST" action="controller/controller.php" style="margin:0px; height:30px; padding:0px; background:#f0f0f0; text-align:center;">';
 
         // Navigation buttons with GIF icons
-        $html .= $this->renderButton('left', '<', $buttonStyle);
-        $html .= $this->renderButton('right', '>', $buttonStyle);
-        $html .= $this->renderButton('up', '/\\', $buttonStyle);
-        $html .= $this->renderButton('down', '\\/', $buttonStyle);
+        $html .= $this->renderButton('left', '<', $buttonStyle, 'map-left');
+        $html .= $this->renderButton('right', '>', $buttonStyle, 'map-right');
+        $html .= $this->renderButton('up', '/\\', $buttonStyle, 'map-up');
+        $html .= $this->renderButton('down', '\\/', $buttonStyle, 'map-down');
 
         // Zoom buttons (keep text for now as user only mentioned 4 navigation icons)
-        $html .= $this->renderButton('zoom_in', '+', $buttonStyle);
-        $html .= $this->renderButton('zoom_out', '-', $buttonStyle);
+        $html .= $this->renderButton('zoom_in', '+', $buttonStyle, 'map-zoom-in');
+        $html .= $this->renderButton('zoom_out', '-', $buttonStyle, 'map-zoom-out');
 
         $html .= '</form>';
 
@@ -110,9 +110,9 @@ class MapView
         $html =
             '<form method="POST" action="controller/search.php" style="margin:0; padding:0px; background:#e8f4f8;">';
         $html .=
-            '<input type="text" name="address" placeholder="Street, City" style="width:200px; padding:5px; font-size:11px; border: 1px solid #ccc;">';
+            '<input type="text" name="address" data-testid="search-address" placeholder="Street, City" style="width:200px; padding:5px; font-size:11px; border: 1px solid #ccc;">';
         $html .=
-            '<input type="submit" value="SEARCH" style="padding:7px 5px 3px 5px; font-size:11px; background:#007bff; color: white; border: 1px solid #0056b3;">';
+            '<input type="submit" value="SEARCH" data-testid="search-submit" style="padding:7px 5px 3px 5px; font-size:11px; background:#007bff; color: white; border: 1px solid #0056b3;">';
         $html .= '</form>';
 
         // Map style links
@@ -135,7 +135,9 @@ class MapView
             if ($currentStyle === $value) {
                 // Active style - styled as plain text (different color)
                 $html .=
-                    '<span style="color:#333; font-weight:bold;">' .
+                    '<span data-testid="' .
+                    $value .
+                    '" class="active" style="color:#333; font-weight:bold;">' .
                     htmlspecialchars($label) .
                     '</span>';
             } else {
@@ -143,6 +145,8 @@ class MapView
                 $html .=
                     '<a href="controller/mapstyle.php?map_style=' .
                     urlencode($value) .
+                    '" data-testid="' .
+                    $value .
                     '" style="color:#007bff; text-decoration:none;">' .
                     htmlspecialchars($label) .
                     '</a>';
@@ -172,12 +176,18 @@ class MapView
         return '</body></html>';
     }
 
-    private function renderButton(string $name, string $label, string $style): string
-    {
+    private function renderButton(
+        string $name,
+        string $label,
+        string $style,
+        string $testId,
+    ): string {
         return '<input type="submit" name="' .
             $name .
             '" value="' .
             $label .
+            '" data-testid="' .
+            $testId .
             '" style="' .
             $style .
             '">';

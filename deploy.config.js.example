@@ -1,0 +1,5 @@
+const USER = "";
+const PASS = "";
+const HOST = "";
+
+module.exports = { USER, PASS, HOST };
