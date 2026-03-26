@@ -24,6 +24,7 @@ test.describe('Complete User Workflows', () => {
 
     // Search "Eiffel Tower"
     await page.getByTestId('search-address').fill('Eiffel Tower');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -71,6 +72,7 @@ test.describe('Complete User Workflows', () => {
   test('multiple searches in one session', async ({ page }) => {
     const searchSelectAndVerifyCity = async (city: string, expectedLat: number, expectedLon: number) => {
       await page.getByTestId('search-address').fill(city);
+      await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
       await page.getByTestId('search-submit').click();
       await page.waitForLoadState('domcontentloaded');
       await page.getByTestId('search-result-item-0').click();

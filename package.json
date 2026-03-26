@@ -2,9 +2,9 @@
   "scripts": {
     "format": "prettier --write src/",
     "deploy": "node deploy.js",
-    "test": "playwright test",
-    "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
+    "test": "playwright test --workers 1",
+    "test:ui": "playwright test --ui --workers 1",
+    "test:headed": "playwright test --headed --workers 1"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.24.0",

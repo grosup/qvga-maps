@@ -60,6 +60,7 @@ test.describe('Map Style Switching', () => {
 
     // Search and select
     await page.getByTestId('search-address').fill('Grand Canyon');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
     await page.getByTestId('search-result-item-0').click();

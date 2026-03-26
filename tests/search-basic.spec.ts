@@ -9,6 +9,7 @@ test.describe('Search Functionality', () => {
   test('valid search "Berlin" returns results', async ({ page }) => {
     // Enter search (uses data-test-id in HTML)
     await page.getByTestId('search-address').fill('Berlin');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -28,6 +29,7 @@ test.describe('Search Functionality', () => {
   test('empty search shows "No results" message', async ({ page }) => {
     // Submit empty
     await page.getByTestId('search-address').fill('');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -38,6 +40,7 @@ test.describe('Search Functionality', () => {
 
   test('invalid location shows "No results"', async ({ page }) => {
     await page.getByTestId('search-address').fill('xyz123nonexistent');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -47,6 +50,7 @@ test.describe('Search Functionality', () => {
 
   test('search with special characters works', async ({ page }) => {
     await page.getByTestId('search-address').fill('São Paulo');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -64,6 +68,7 @@ test.describe('Search Functionality', () => {
 
   test('search returns maximum 5 results', async ({ page }) => {
     await page.getByTestId('search-address').fill('avenida de la paz');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -80,6 +85,7 @@ test.describe('Search Functionality', () => {
 
   test('complex address search returns relevant results', async ({ page }) => {
     await page.getByTestId('search-address').fill('Brandenburg Gate, Berlin');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 

@@ -22,6 +22,7 @@ test.describe('Search to Map Integration', () => {
 
     // Search for Paris
     await page.getByTestId('search-address').fill('Paris');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
 
@@ -47,6 +48,7 @@ test.describe('Search to Map Integration', () => {
 
     // Search and select
     await page.getByTestId('search-address').fill('Tokyo');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
     await page.getByTestId('search-result-item-0').click();
@@ -87,6 +89,7 @@ test.describe('Search to Map Integration', () => {
   test('can navigate after selecting search result', async ({ page }) => {
     // Search and select Tokyo
     await page.getByTestId('search-address').fill('Tokyo');
+    await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
     await page.getByTestId('search-submit').click();
     await page.waitForLoadState('domcontentloaded');
     await page.getByTestId('search-result-item-0').click();
@@ -117,6 +120,7 @@ test.describe('Search to Map Integration', () => {
   test('multiple searches in one session', async ({ page }) => {
     const searchSelectAndVerifyCity = async (city: string, expectedLat: number, expectedLon: number) => {
       await page.getByTestId('search-address').fill(city);
+      await page.waitForTimeout(1000); // Delay to avoid Nominatim rate limiting
       await page.getByTestId('search-submit').click();
       await page.waitForLoadState('domcontentloaded');
       await page.getByTestId('search-result-item-0').click();
