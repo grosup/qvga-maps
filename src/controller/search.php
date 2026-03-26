@@ -1,10 +1,15 @@
 <?php
 /**
- * Comprehensive Search Handler
+ * Comprehensive Search Handler using Mapbox Geocoding API
  * Handles POST/GET, robust error handling, always shows map
  */
 
 session_start();
+
+require_once '../config.php';
+require_once '../class/GeocodingService.php';
+
+use NokiaMaps\Service\GeocodingService;
 
 // Initialize default session values if not set
 if (!isset($_SESSION['lat'])) {
@@ -12,11 +17,6 @@ if (!isset($_SESSION['lat'])) {
     $_SESSION['lon'] = 13.4;
     $_SESSION['zoom'] = 14;
 }
-
-// Debug: Log what's being received
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-$hasAddress = isset($_GET['address']) || isset($_POST['address']);
-$hasSelect = isset($_GET['select']);
 
 // Capture address from either POST or GET
 $address = '';
@@ -28,84 +28,54 @@ if (isset($_POST['address'])) {
 
 $results = [];
 $error = '';
-$successMessage = '';
+$errorMessage = '';
 
 // If user selected a result, set location and redirect to map
-if ($hasSelect && isset($_GET['select']) && is_numeric($_GET['select'])) {
-    // First, we need to fetch the search results to know what was selected
-    if (!empty($address)) {
-        // We'll do the search again to populate results
-        $url =
-            'https://nominatim.openstreetmap.org/search?' .
-            'q=' .
-            urlencode($address) .
-            '&format=json' .
-            '&limit=5' .
-            '&addressdetails=1';
+if (isset($_GET['select']) && is_numeric($_GET['select']) && !empty($address)) {
+    // Create service instance
+    $service = new GeocodingService(defined('MAPBOX_TOKEN') ? MAPBOX_TOKEN : '');
 
-        $context = stream_context_create([
-            'http' => [
-                'header' => "User-Agent: Nokia225MapApp/1.0\r\n",
-            ],
-        ]);
+    // Search to get results
+    $searchResults = $service->geocode($address, 5);
 
-        $response = @file_get_contents($url, false, $context);
+    if (!empty($searchResults)) {
+        $selectIndex = (int) $_GET['select'];
+        if (isset($searchResults[$selectIndex])) {
+            $selected = $searchResults[$selectIndex];
+            $_SESSION['lat'] = $selected['lat'];
+            $_SESSION['lon'] = $selected['lon'];
 
-        if ($response !== false) {
-            $results = json_decode($response, true);
-            $selectIndex = (int) $_GET['select'];
-
-            if (isset($results[$selectIndex])) {
-                $selected = $results[$selectIndex];
-                $_SESSION['lat'] = $selected['lat'];
-                $_SESSION['lon'] = $selected['lon'];
-                // Redirect to map
-                header('Location: ../index.php');
-                exit();
-            } else {
-                $error = 'Invalid selection.';
-            }
+            // Redirect to map
+            header('Location: ../index.php');
+            exit();
         } else {
-            $error = 'Search failed. Please try again.';
+            $error = 'Invalid selection.';
         }
-    } else {
-        $error = 'No address provided.';
-    }
-}
-
-// Perform the search
-if (!empty($address) && !$hasSelect) {
-    $url =
-        'https://nominatim.openstreetmap.org/search?' .
-        'q=' .
-        urlencode($address) .
-        '&format=json' .
-        '&limit=5' .
-        '&addressdetails=1';
-
-    $context = stream_context_create([
-        'http' => [
-            'header' => "User-Agent: Nokia225MapApp/1.0\r\n",
-        ],
-    ]);
-
-    $response = @file_get_contents($url, false, $context);
-
-    if ($response !== false) {
-        $results = json_decode($response, true);
-
-        // Store search results in session for selection
-        $_SESSION['search_results'] = $results;
-        $_SESSION['search_address'] = $address;
     } else {
         $error = 'Search failed. Please try again.';
     }
 }
 
-// If no results, show error
-$errorMessage = '';
+// Perform the search
+if (!empty($address) && !isset($_GET['select'])) {
+    $service = new GeocodingService(defined('MAPBOX_TOKEN') ? MAPBOX_TOKEN : '');
+    $results = $service->geocode($address, 5);
+
+    // Store search results in session for selection
+    $_SESSION['search_results'] = $results;
+    $_SESSION['search_address'] = $address;
+
+    if (empty($results)) {
+        $error = 'No results found for "' . htmlspecialchars($address) . '"';
+    }
+}
+
+// If error occurred, show error message
 if (!empty($error)) {
-    $errorMessage = "<div style='color:red;background:#ffe6e6;border:1px solid red;padding:5px;font-size:10px;'>$error</div>";
+    $errorMessage =
+        '<div style="color:red;background:#ffe6e6;border:1px solid red;padding:5px;font-size:10px;">' .
+        htmlspecialchars($error) .
+        '</div>';
 }
 
 // Render search results
@@ -116,14 +86,14 @@ if (!empty($error)) {
     <title>Search Results</title>
     <meta charset="UTF-8">
     <style>
-    body { margin:0; padding:5px; font-size: 11px; font-family: Arial, sans-serif; }
-    h2 { margin:0 0 10px 0; font-size: 12px; }
-    .result { padding: 7px; margin: 2px 0; background: #f5f5f5; border: 1px solid #ccc; }
-    .result a { color: #000; text-decoration: none; }
-    .error { background: #ffe6e6; color: red; border: 1px solid red; }
-    .info { margin: 5px 0; color: #666; }
-    .refresh { margin: 10px 0; }
-    .refresh a { display: inline-block; padding: 5px 10px; background: #007bff; color: white; text-decoration: none; }
+        body { margin:0; padding:5px; font-size: 11px; font-family: Arial, sans-serif; }
+        h2 { margin:0 0 10px 0; font-size: 12px; }
+        .result { padding: 7px; margin: 2px 0; background: #f5f5f5; border: 1px solid #ccc; }
+        .result a { color: #000; text-decoration: none; }
+        .error { background: #ffe6e6; color: red; border: 1px solid red; }
+        .info { margin: 5px 0; color: #666; }
+        .refresh { margin: 10px 0; }
+        .refresh a { display: inline-block; padding: 5px 10px; background: #007bff; color: white; text-decoration: none; }
     </style>
 </head>
 <body style="max-width:320px; margin:auto">
@@ -142,9 +112,9 @@ if (!empty($error)) {
     $address,
 ) ?>" data-testid="search-result-item-<?= $index ?>">
                 <?= htmlspecialchars($result['display_name']) ?>
-				</a>
-			</div>
-		<?php endforeach; ?>
+            </a>
+        </div>
+    <?php endforeach; ?>
 <?php elseif (isset($_POST['address']) || isset($_GET['address'])): ?>
     <div class="result error">
         No results found for "<?= htmlspecialchars($address) ?>"

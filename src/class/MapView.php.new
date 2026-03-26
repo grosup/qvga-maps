@@ -1,0 +1,12 @@
+    private function renderCoordinates(array $coords): string
+    {
+        return '<center style="margin:5px 0; font-size:10px; color: #666;">
+Lat: ' .
+        htmlspecialchars($coords['lat']) .
+        ', Lon: ' .
+        htmlspecialchars($coords['lon']) .
+        ', Zoom: ' .
+        htmlspecialchars($coords['zoom']) .
+        '
+</center>';
+    }

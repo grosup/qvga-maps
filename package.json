@@ -3,6 +3,7 @@
     "format": "prettier --write src/ unit/",
     "deploy": "node deploy.js",
     "test": "playwright test --workers 1",
+    "unit": "phpunit --testdox",
     "test:ui": "playwright test --ui --workers 1",
     "test:headed": "playwright test --headed --workers 1"
   },

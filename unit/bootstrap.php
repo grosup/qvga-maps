@@ -31,6 +31,7 @@ $classFiles = [
     __DIR__ . '/../src/class/MapController.php',
     __DIR__ . '/../src/class/MapView.php',
     __DIR__ . '/../src/class/MapRenderer.php',
+    __DIR__ . '/../src/class/GeocodingService.php',
 ];
 
 foreach ($classFiles as $file) {

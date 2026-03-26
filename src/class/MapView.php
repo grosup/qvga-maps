@@ -29,6 +29,7 @@ class MapView
         echo $this->renderControls();
         echo $this->renderSearch();
         echo $this->renderCoordinates($coords);
+        echo $this->renderSMSLink($coords);
         echo $this->renderFooter();
     }
 
@@ -169,6 +170,14 @@ class MapView
             htmlspecialchars($coords['zoom']) .
             '
 </p>';
+    }
+    private function renderSMSLink(array $coords): string
+    {
+        return '<p style="margin:0; font-size:10px; text-align: center;"><a href="sms:?body=https://www.google.com/maps/search/?api=1&query=' .
+            htmlspecialchars($coords['lat']) .
+            ',' .
+            htmlspecialchars($coords['lon']) .
+            '" >Send via SMS</a></p>';
     }
 
     private function renderFooter(): string
