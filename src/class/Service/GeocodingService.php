@@ -2,17 +2,18 @@
 
 namespace NokiaMaps\Service;
 
-class GeocodingService
+/**
+ * Mapbox Geocoding Service
+ * Concrete implementation using Mapbox Geocoding API
+ */
+class GeocodingService extends AbstractGeocodingService
 {
     private string $mapboxToken;
-    private string $cacheDir;
-    private array $cache = [];
 
-    public function __construct(string $mapboxToken)
+    public function __construct(string $mapboxToken = '')
     {
+        parent::__construct();
         $this->mapboxToken = $mapboxToken;
-        $this->cacheDir = __DIR__ . '/../cache/geocoding';
-        $this->ensureCacheDirectoryExists();
     }
 
     /**
@@ -155,88 +156,5 @@ class GeocodingService
             'lon' => $lon,
             'type' => $type,
         ];
-    }
-
-    /**
-     * Get cached results if available and fresh
-     *
-     * @param string $query The search query
-     * @return array|null Cached results or null
-     */
-    private function getCached(string $query): ?array
-    {
-        $cacheKey = $this->getCacheKey($query);
-        $cacheFile = $this->cacheDir . '/' . $cacheKey . '.json';
-
-        if (!file_exists($cacheFile)) {
-            return null;
-        }
-
-        // Check if cache is fresh (< 1 hour)
-        if (filemtime($cacheFile) < time() - 3600) {
-            return null;
-        }
-
-        $data = file_get_contents($cacheFile);
-
-        if ($data === false) {
-            return null;
-        }
-
-        $decoded = json_decode($data, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return null;
-        }
-
-        return $decoded['results'] ?? null;
-    }
-
-    /**
-     * Save results to cache
-     *
-     * @param string $query The search query
-     * @param array $results Results to cache
-     * @return bool Success
-     */
-    private function saveToCache(string $query, array $results): bool
-    {
-        $cacheKey = $this->getCacheKey($query);
-        $cacheFile = $this->cacheDir . '/' . $cacheKey . '.json';
-
-        $data = [
-            'query' => $query,
-            'results' => $results,
-            'timestamp' => time(),
-        ];
-
-        $json = json_encode($data);
-
-        if ($json === false) {
-            return false;
-        }
-
-        return file_put_contents($cacheFile, $json) !== false;
-    }
-
-    /**
-     * Generate cache key for a query
-     *
-     * @param string $query The search query
-     * @return string Cache key
-     */
-    private function getCacheKey(string $query): string
-    {
-        return md5(strtolower(trim($query)));
-    }
-
-    /**
-     * Ensure cache directory exists
-     */
-    private function ensureCacheDirectoryExists(): void
-    {
-        if (!is_dir($this->cacheDir)) {
-            mkdir($this->cacheDir, 0755, true);
-        }
     }
 }

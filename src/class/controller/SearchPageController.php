@@ -6,15 +6,20 @@
 
 namespace NokiaMaps\Controller;
 
-use NokiaMaps\Service\GeocodingService;
+use NokiaMaps\Session;
+use NokiaMaps\Service\GeocodingServiceFactory;
+use NokiaMaps\Service\AbstractGeocodingService;
 
 class SearchPageController
 {
-    private GeocodingService $geocodingService;
+    private Session $session;
+    private AbstractGeocodingService $geocodingService;
+    private GeocodingServiceFactory $geocodingServiceFactory;
 
-    public function __construct(string $mapboxToken = '')
+    public function __construct(Session $session, string $mapboxToken = '')
     {
-        $this->geocodingService = new GeocodingService($mapboxToken);
+        $this->session = $session;
+        $this->geocodingServiceFactory = new GeocodingServiceFactory($mapboxToken);
     }
 
     /**
@@ -35,6 +40,17 @@ class SearchPageController
         } elseif (isset($_GET['address'])) {
             $address = trim($_GET['address']);
         }
+
+        // Get API preference from POST (user selection) or session (remembered choice)
+        $apiPreference = $_POST['geocoding_api'] ?? $this->session->getGeocodingApi();
+
+        // Save the preference to session if it came from POST
+        if (isset($_POST['geocoding_api'])) {
+            $this->session->setGeocodingApi($apiPreference);
+        }
+
+        // Create geocoding service using the factory
+        $this->geocodingService = $this->geocodingServiceFactory->create($apiPreference);
 
         // If user selected a result, set location and redirect to map
         if (isset($_GET['select']) && is_numeric($_GET['select']) && !empty($address)) {

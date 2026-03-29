@@ -20,6 +20,16 @@
 <form method="POST" action="controller/search.php" style="margin:0; padding:0px; background:#e8f4f8;">
  <input type="text" name="address" data-testid="search-address" placeholder="Street, City" style="width:200px; padding:5px; font-size:11px; border: 1px solid #ccc;">
  <input type="submit" value="SEARCH" data-testid="search-submit" style="padding:7px 5px 3px 5px; font-size:11px; background:#007bff; color: white; border: 1px solid #0056b3;">
+<select name="geocoding_api" data-testid="geocoding-api-select" style="font-size:10px; width:45px; padding:1px; margin-left:2px; border:1px solid #ccc;">
+<option value="mapbox"<?= isset($_SESSION['geocoding_api']) &&
+$_SESSION['geocoding_api'] === 'mapbox'
+    ? ' selected'
+    : '' ?>>Mbx</option>
+<option value="nominatim"<?= isset($_SESSION['geocoding_api']) &&
+$_SESSION['geocoding_api'] === 'nominatim'
+    ? ' selected'
+    : '' ?>>Nom</option>
+</select>
 </form>
 
 <div style="margin:0; padding:3px 5px; background:#f0f0f0; font-size:9px;">

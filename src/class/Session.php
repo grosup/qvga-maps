@@ -13,6 +13,7 @@ class Session
     private const DEFAULT_ZOOM = 14;
     private const MIN_ZOOM = 1;
     private const MAX_ZOOM = 22;
+    private const DEFAULT_GEOCODING_API = 'mapbox'; // Default geocoding service
 
     private array $session;
 
@@ -32,6 +33,30 @@ class Session
             $_SESSION['lon'] = self::DEFAULT_LON;
             $_SESSION['zoom'] = self::DEFAULT_ZOOM;
             $_SESSION['map_style'] = 'streets-v12'; // Default Mapbox style
+            $_SESSION['geocoding_api'] = self::DEFAULT_GEOCODING_API; // Default geocoding service
+        }
+    }
+
+    /**
+     * Get preferred geocoding API (mapbox or nominatim)
+     *
+     * @return string API preference
+     */
+    public function getGeocodingApi(): string
+    {
+        return $this->session['geocoding_api'] ?? self::DEFAULT_GEOCODING_API;
+    }
+
+    /**
+     * Set preferred geocoding API
+     *
+     * @param string $api 'mapbox' or 'nominatim'
+     * @return void
+     */
+    public function setGeocodingApi(string $api): void
+    {
+        if (in_array($api, ['mapbox', 'nominatim'])) {
+            $this->session['geocoding_api'] = $api;
         }
     }
 

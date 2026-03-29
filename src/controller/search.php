@@ -8,9 +8,11 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../autoloader.php';
 
 use NokiaMaps\Controller\SearchPageController;
+use NokiaMaps\Session;
 
 session_start();
 
-// Create controller and handle request
-$controller = new SearchPageController(MAPBOX_TOKEN);
+// Create session and controller
+$session = new Session();
+$controller = new SearchPageController($session, MAPBOX_TOKEN);
 $controller->handle();
