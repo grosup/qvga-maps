@@ -16,3 +16,4 @@ deploy.config.js
 test-output.txt 
 /tasks
 .phpunit.cache/
+/src/class/cache

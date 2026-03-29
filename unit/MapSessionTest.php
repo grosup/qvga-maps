@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use NokiaMaps\Session\Session;
+use NokiaMaps\Session;
 
 class MapSessionTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use NokiaMaps\Controller\NavigationController;
-use NokiaMaps\Session\Session;
+use NokiaMaps\Session;
 
 class MapControllerTest extends TestCase
 {

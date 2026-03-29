@@ -1,8 +1,8 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use NokiaMaps\Renderer\Renderer;
-use NokiaMaps\Session\Session;
+use NokiaMaps\Renderer;
+use NokiaMaps\Session;
 
 class MapRendererTest extends TestCase
 {
