@@ -4,15 +4,10 @@
  * Generates and outputs map images via Mapbox API
  */
 
-namespace NokiaMaps\Renderer;
+namespace NokiaMaps;
 
-use NokiaMaps\Session\Session;
+use NokiaMaps\Session;
 use NokiaMaps\Service\ReverseGeocodingService;
-
-// Ensure service is available for production environments without autoloader
-if (!class_exists('NokiaMaps\Service\ReverseGeocodingService')) {
-    require_once __DIR__ . '/Service/ReverseGeocodingService.php';
-}
 
 class Renderer
 {

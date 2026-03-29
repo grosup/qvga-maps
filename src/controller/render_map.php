@@ -7,11 +7,10 @@
 session_start();
 
 require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../class/Session.php';
-require_once __DIR__ . '/../class/Renderer.php';
+require_once __DIR__ . '/../autoloader.php';
 
-use NokiaMaps\Session\Session;
-use NokiaMaps\Renderer\Renderer;
+use NokiaMaps\Session;
+use NokiaMaps\Renderer;
 
 // Initialize session
 $session = new Session();

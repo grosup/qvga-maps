@@ -4,10 +4,9 @@
  * Simple wrapper that instantiates StyleController and handles the request
  */
 
-require_once __DIR__ . '/../class/Session.php';
-require_once __DIR__ . '/../class/controller/StyleController.php';
+require_once __DIR__ . '/../autoloader.php';
 
-use NokiaMaps\Session\Session;
+use NokiaMaps\Session;
 use NokiaMaps\Controller\StyleController;
 
 session_start();

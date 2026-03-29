@@ -6,8 +6,8 @@
 
 namespace NokiaMaps\Controller;
 
-use NokiaMaps\Session\Session;
-use NokiaMaps\Renderer\Renderer;
+use NokiaMaps\Session;
+use NokiaMaps\Renderer;
 
 class MapPageController
 {

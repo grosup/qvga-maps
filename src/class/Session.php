@@ -4,7 +4,7 @@
  * Manages map coordinates and zoom level in session
  */
 
-namespace NokiaMaps\Session;
+namespace NokiaMaps;
 
 class Session
 {

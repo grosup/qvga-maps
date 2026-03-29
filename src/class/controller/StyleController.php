@@ -7,7 +7,7 @@
 
 namespace NokiaMaps\Controller;
 
-use NokiaMaps\Session\Session;
+use NokiaMaps\Session;
 
 class StyleController
 {

@@ -4,13 +4,11 @@
  * Uses MVC pattern: Controller prepares data, View template handles presentation
  */
 
-require_once 'config.php';
-require_once 'class/Session.php';
-require_once 'class/Renderer.php';
-require_once 'class/controller/MapPageController.php';
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/autoloader.php';
 
-use NokiaMaps\Session\Session;
-use NokiaMaps\Renderer\Renderer;
+use NokiaMaps\Session;
+use NokiaMaps\Renderer;
 use NokiaMaps\Controller\MapPageController;
 
 // Initialize session
