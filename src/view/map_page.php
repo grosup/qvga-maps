@@ -38,7 +38,7 @@
 <form method="POST" action="controller/markers.php" class="default-form">
 <span>.</span>
 <input type="submit" name="action" value="+ pin" data-testid="marker-add" class="btn" style="border: 1px solid #ADF089; background-color:#ADF089; ">
-<input type="submit" name="action" value="clear pins" data-testid="marker-clear" class="btn" style="border: 1px solid #F09B89; background-color:#F09B89;">
+<input type="submit" name="action" value="clear" data-testid="marker-clear" class="btn" style="border: 1px solid #F09B89; background-color:#F09B89;">
 </form>
 
 <div style="margin:0; padding:3px 5px; background:#f0f0f0; font-size:9px;">
