@@ -14,6 +14,8 @@ class Session
     private const MIN_ZOOM = 1;
     private const MAX_ZOOM = 22;
     private const DEFAULT_GEOCODING_API = 'mapbox'; // Default geocoding service
+    private const DEFAULT_DIRECTIONS_PROVIDER = 'mapbox'; // Default directions provider (was openrouteservice)
+    private const COOKIE_EXPIRE = 86400 * 30; // 30 days
 
     private array $session;
 
@@ -34,9 +36,15 @@ class Session
             $_SESSION['zoom'] = self::DEFAULT_ZOOM;
             $_SESSION['map_style'] = 'streets-v12'; // Default Mapbox style
             $_SESSION['geocoding_api'] = self::DEFAULT_GEOCODING_API; // Default geocoding service
+            $_SESSION['directions_provider'] = self::DEFAULT_DIRECTIONS_PROVIDER; // Default directions provider
             $_SESSION['markers'] = []; // Initialize empty markers array
-        } elseif (!isset($_SESSION['markers'])) {
-            $_SESSION['markers'] = [];
+        } else {
+            if (!isset($_SESSION['markers'])) {
+                $_SESSION['markers'] = [];
+            }
+            if (!isset($_SESSION['directions_provider'])) {
+                $_SESSION['directions_provider'] = self::DEFAULT_DIRECTIONS_PROVIDER;
+            }
         }
     }
 
@@ -47,7 +55,11 @@ class Session
      */
     public function getGeocodingApi(): string
     {
-        return $this->session['geocoding_api'] ?? self::DEFAULT_GEOCODING_API;
+        // Prefer session value, then cookie, then default
+        if (isset($this->session['geocoding_api'])) {
+            return $this->session['geocoding_api'];
+        }
+        return $this->getCookie('geocoding_api', self::DEFAULT_GEOCODING_API);
     }
 
     /**
@@ -60,7 +72,34 @@ class Session
     {
         if (in_array($api, ['mapbox', 'nominatim'])) {
             $this->session['geocoding_api'] = $api;
+            $this->setCookie('geocoding_api', $api);
         }
+    }
+
+    /**
+     * Get directions provider preference
+     *
+     * @return string Provider preference
+     */
+    public function getDirectionsProvider(): string
+    {
+        // Prefer session value, then cookie, then default
+        if (isset($this->session['directions_provider'])) {
+            return $this->session['directions_provider'];
+        }
+        return $this->getCookie('directions_provider', self::DEFAULT_DIRECTIONS_PROVIDER);
+    }
+
+    /**
+     * Set directions provider preference
+     *
+     * @param string $provider 'openrouteservice', 'mapbox'
+     * @return void
+     */
+    public function setDirectionsProvider(string $provider): void
+    {
+        $this->session['directions_provider'] = $provider;
+        $this->setCookie('directions_provider', $provider);
     }
 
     public function getMapStyle(): string
@@ -225,5 +264,29 @@ class Session
 
         $colorIndex = $count % count(MARKER_COLORS);
         return MARKER_COLORS[$colorIndex] ?? 'FF0000';
+    }
+
+    /**
+     * Get cookie value with fallback to default
+     *
+     * @param string $name Cookie name
+     * @param string $default Default value if cookie not found
+     * @return string Cookie value or default
+     */
+    private function getCookie(string $name, string $default = ''): string
+    {
+        return $_COOKIE[$name] ?? $default;
+    }
+
+    /**
+     * Set cookie value
+     *
+     * @param string $name Cookie name
+     * @param string $value Cookie value
+     * @return void
+     */
+    private function setCookie(string $name, string $value): void
+    {
+        setcookie($name, $value, time() + self::COOKIE_EXPIRE, '/', '', false, true);
     }
 }
